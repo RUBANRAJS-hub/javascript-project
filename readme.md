@@ -1,150 +1,186 @@
-# Ruban JS Projects Hub
+# 🚀 Ruban JS Projects Hub
 
 <p align="center">
-  <img src="3d-cube.svg" width="350" alt="3D Rotating Cube Animation" />
+  <img src="3d-cube.svg" width="320" alt="3D Rotating Cube Animation" />
 </p>
 
-A premium, interactive showcase of **31 mini-projects** built using raw, vanilla front-end web technologies: **HTML5, CSS3, and JavaScript**.
+<p align="center">
+  <strong>An elite showcase of 31 interactive mini-projects crafted using raw vanilla front-end web technologies.</strong>
+</p>
 
-This repository contains a central glassmorphic portal/dashboard allowing you to browse, filter, search, and launch all projects instantly.
+<p align="center">
+  <a href="https://github.com/RUBANRAJS-hub/javascript-project/stargazers"><img src="https://img.shields.io/github/stars/RUBANRAJS-hub/javascript-project?style=for-the-badge&color=818cf8" alt="GitHub Stars"/></a>
+  <a href="https://github.com/RUBANRAJS-hub/javascript-project/network/members"><img src="https://img.shields.io/github/forks/RUBANRAJS-hub/javascript-project?style=for-the-badge&color=34d399" alt="GitHub Forks"/></a>
+  <a href="https://github.com/RUBANRAJS-hub/javascript-project/blob/main/LICENSE"><img src="https://img.shields.io/github/license/RUBANRAJS-hub/javascript-project?style=for-the-badge&color=fb7185" alt="License"/></a>
+</p>
 
----
-
-## 🚀 How to Run the Projects Locally
-
-To start the local development server and access the interactive projects hub:
-
-1. **Start the HTTP Server**:
-   Ensure you have Python installed, then run the following command in the project directory:
-   ```powershell
-   python -m http.server 3000
-   ```
-2. **Access the Hub**:
-   Open your browser and navigate to: **[http://localhost:3000/](http://localhost:3000/)**
-3. **Launch Apps**:
-   Browse the 31 cards, search by tags/names, or click **"Launch App"** to run any mini-project in a new tab.
+<p align="center">
+  <img src="https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5"/>
+  <img src="https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3"/>
+  <img src="https://img.shields.io/badge/javascript-%23F7DF1E.svg?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript"/>
+</p>
 
 ---
 
-## 🎨 Visual Project Architecture (Mermaid Graph)
+## ✨ Features
 
-Here is a visual breakdown of all 31 projects organized by their primary capabilities and categories:
+* **Centralized Interactive Hub**: Responsive glassmorphic dashboard to access all 31 projects instantly.
+* **Instant Keyword Filtering**: Filter cards live by typing names, tags, or features.
+* **Categorical Quick Tags**: Toggle project displays using category filters (Games, APIs, Media, DOM).
+* **Fully Responsive UI**: Mobile-friendly grids, smooth hover transitions, and dark/light dynamic styling.
+* **Hardware-Accelerated SVGs**: Embedded 3D floating animation renders natively without weight.
 
-```mermaid
-flowchart TD
-    %% Custom Styles %%
-    classDef games fill:#f472b6,stroke:#db2777,stroke-width:2px,color:#fff;
-    classDef apis fill:#38bdf8,stroke:#0284c7,stroke-width:2px,color:#fff;
-    classDef media fill:#34d399,stroke:#059669,stroke-width:2px,color:#fff;
-    classDef dom fill:#a78bfa,stroke:#7c3aed,stroke-width:2px,color:#fff;
-    classDef core fill:#f59e0b,stroke:#d97706,stroke-width:2px,color:#fff;
+---
 
-    Hub([Ruban JS Projects Hub]):::core
+## 🛠️ Tech Stack
 
-    %% Categories %%
-    Hub --> Games[🎮 7 Games]:::games
-    Hub --> APIs[🌐 6 API Integrations]:::apis
-    Hub --> Media[🔊 5 Media & Speech]:::media
-    Hub --> Utilities[🛠️ 13 DOM & Utilities]:::dom
+* **Front-End Core**: HTML5 Semantic Layout, CSS3 Grid/Flexbox/Transitions.
+* **Logic & APIs**: Vanilla ES6+ JavaScript, Promises, Async/Await, Array Iteration, Key/Mouse Event Listeners.
+* **System APIs**: Web Speech API (Synthesis/Recognition), HTML5 Video/Audio APIs, Web Audio API Synthesizers.
+* **Storage**: Web Storage API (`localStorage`) for preserving user options, timer histories, and customized decks.
 
-    %% Games Branch %%
-    Games --> G1[Hangman Game]:::games
-    Games --> G2[Typing Game]:::games
-    Games --> G3[Memory Cards]:::games
-    Games --> G4[Breakout Game]:::games
-    Games --> G5[Speak Guess]:::games
-    Games --> G6[RGB Guesser]:::games
-    Games --> G7[Pixel Artboard]:::games
+---
 
-    %% APIs Branch %%
-    APIs --> A1[Exchange Rate]:::apis
-    APIs --> A2[Meal Finder]:::apis
-    APIs --> A3[Infinite Scroll]:::apis
-    APIs --> A4[Lyrics Search]:::apis
-    APIs --> A5[QR Generator]:::apis
-    APIs --> A6[Weather Dashboard]:::apis
+## 📁 Folder Structure
 
-    %% Media Branch %%
-    Media --> M1[Video Player]:::media
-    Media --> M2[Music Player]:::media
-    Media --> M3[Speech Reader]:::media
-    Media --> M4[Pomodoro Sounds]:::media
-    Media --> M5[Text Reader]:::media
+The repository organizes projects inside flat directories with the central index portal at the root:
 
-    %% Utilities Branch %%
-    Utilities --> U1[Form Validator]:::dom
-    Utilities --> U2[Seat Booking]:::dom
-    Utilities --> U3[DOM Arrays]:::dom
-    Utilities --> U4[Menu Slider]:::dom
-    Utilities --> U5[Expense Tracker]:::dom
-    Utilities --> U6[Relaxer App]:::dom
-    Utilities --> U7[Countdown]:::dom
-    Utilities --> U8[Product Filter]:::dom
-    Utilities --> U9[Sortable List]:::dom
-    Utilities --> U10[Calculator]:::dom
-    Utilities --> U11[Study Deck]:::dom
-    Utilities --> U12[Sort Visualizer]:::dom
-    Utilities --> U13[Voice Notes]:::dom
+```text
+javascript/
+├── 3d-cube.svg                # 3D Animation Asset
+├── index.html                 # Central Glassmorphic Hub Page
+├── readme.md                  # Showcase Documentation
+├── breakout-game/             # Project 17
+│   ├── index.html
+│   ├── script.js
+│   └── style.css
+├── glass-calculator/          # Project 22
+│   └── index.html
+├── pomodoro-sounds/           # Project 23
+│   └── index.html
+└── ... (All other project folders)
 ```
 
 ---
 
-## 📁 Project Catalog & Specifications
+## 🚀 Installation & Local Setup
 
-Below is the complete analysis and specification table of the 31 registered projects, organized by category:
+To run this projects hub locally on your machine:
 
-### 🎮 Games
-| ID | Project Name | Directory | Tech Stack / APIs | Description |
-|:---:|:---|:---|:---|:---|
-| 07 | [Hangman Game](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/hangman/index.html) | `hangman/` | SVG, Key Events, Arrays | A retro word-guessing game with dynamic stick-figure rendering. |
-| 12 | [Typing Game](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/typing-game/index.html) | `typing-game/` | DOM, Timers, LocalStorage | Beat the clock by typing random words with variable difficulty modes. |
-| 14 | [Memory Cards](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/memory-cards/index.html) | `memory-cards/` | 3D CSS Transforms, LocalStorage | Flashcard matching UI utilizing 3D flipping animation blocks. |
-| 17 | [Breakout Game](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/breakout-game/index.html) | `breakout-game/` | HTML5 Canvas, 2D Physics | Brick-breaker game featuring collisions, scores, and canvas rendering. |
-| 19 | [Speak Number Guess](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/speak-number-guess/index.html) | `speak-number-guess/` | Web Speech API (Recognition) | Guess a number by speaking directly into the microphone. |
-| 24 | [RGB Color Guessing Game](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/rgb-guesser/index.html) | `rgb-guesser/` | DOM, Array Methods, Math | Learn color models by matching RGB values to color grids. |
-| 25 | [Pixel Art Draw Board](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/pixel-artboard/index.html) | `pixel-artboard/` | Canvas, Flood-Fill, Blob API | Design pixel art on a custom grid and export drawings as PNG. |
-
-### 🌐 API Integration
-| ID | Project Name | Directory | Tech Stack / APIs | Description |
-|:---:|:---|:---|:---|:---|
-| 04 | [Exchange Rate Calculator](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/exchange-rate/index.html) | `exchange-rate/` | Fetch API, JSON, Async | Calculate currency swaps using live foreign exchange rate endpoints. |
-| 08 | [Mealfinder App](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/meal-finder/index.html) | `meal-finder/` | Fetch API, DOM | Query dishes and ingredients using search criteria via MealDB API. |
-| 11 | [Infinite Scroll Blog](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/infinite_scroll_blog/index.html) | `infinite_scroll_blog/` | Fetch, Scroll API | Auto-loading post feeds that fetch data as the user scrolls. |
-| 15 | [Lyrics Search App](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/lyrics-search/index.html) | `lyrics-search/` | Fetch, Audio API, Pagination | Search song lyrics, browse tracks, and play previews. |
-| 27 | [QR Code Generator](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/qr-generator/index.html) | `qr-generator/` | Fetch, QR Server API | Instantly creates and downloads custom QR codes for any link. |
-| 28 | [Weather & Dynamic Theme](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/weather-theme/index.html) | `weather-theme/` | Async/Await, UI Themes | Dynamic weather widget that alters page themes based on local skies. |
-
-### 🔊 Media & Speech
-| ID | Project Name | Directory | Tech Stack / APIs | Description |
-|:---:|:---|:---|:---|:---|
-| 03 | [Custom Video Player](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/custom-video-player/index.html) | `custom-video-player/` | HTML5 Video Media API | Custom player UI controls with styling for scrubbers and volume. |
-| 10 | [Music Player](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/music-player/index.html) | `music-player/` | HTML5 Audio Media API | Audio tracks controller featuring album spins and timeline progress. |
-| 13 | [Speech Text Reader](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/speech-text-reader/index.html) | `speech-text-reader/` | Web Speech API (Synthesis) | Multi-voice synthesizer text-to-speech visual helper dashboard. |
-| 23 | [Pomodoro & Ambient Sounds](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/pomodoro-sounds/index.html) | `pomodoro-sounds/` | Audio API, Oscillator Noise | Work timer utilizing synthesized rain and ocean wave noise. |
-| 29 | [Text Analyzer & Reader](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/text-analyzer/index.html) | `text-analyzer/` | Speech Synthesis, Regex | Calculates counts, keywords, and reads text with dynamic voice pitches. |
-
-### 🛠️ DOM Manipulation & Utilities
-| ID | Project Name | Directory | Tech Stack / APIs | Description |
-|:---:|:---|:---|:---|:---|
-| 01 | [Form Validator](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/form-validator/index.html) | `form-validator/` | DOM, Regex, CSS | Client-side input validation checking passwords, email, and formats. |
-| 02 | [Movie Seat Booking](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/movie-seat-booking/index.html) | `movie-seat-booking/` | LocalStorage, SVG | Dynamic ticket price calculation with active seat occupancy storage. |
-| 05 | [DOM Array Methods](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/dom-array-methods/index.html) | `dom-array-methods/` | Array Helpers, Fetch | Renders mock income metrics testing foreach, map, sort, and reduce. |
-| 06 | [Menu Slider & Modal](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/modal-menu-slider/index.html) | `modal-menu-slider/` | CSS Transitions, Toggle | Navigation menu sidebar and overlays using smooth CSS state transitions. |
-| 09 | [Expense Tracker](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/expense-tracker/index.html) | `expense-tracker/` | LocalStorage, Arrays | Tracks positive/negative transactions computing budgets and totals. |
-| 16 | [Relaxer App](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/relaxer-app/index.html) | `relaxer-app/` | CSS Keyframe Animations | Breathe-in, hold, and breathe-out mindfulness visual aid. |
-| 18 | [New Year Countdown](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/new-year-countdown/index.html) | `new-year-countdown/` | Date Objects, CSS Loaders | Modern timer calculating the exact days/hours/minutes to New Year. |
-| 20 | [Product Filtering UI](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/product-filtering/index.html) | `product-filtering/` | Filtering Algorithms | Instantly filters lists of products matching sizes, prices, and tags. |
-| 21 | [Sortable List](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/sortable-list/index.html) | `sortable-list/` | HTML5 Drag & Drop API | Draggable lists allowing users to re-rank item indexes. |
-| 22 | [Glassmorphic Calculator](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/glass-calculator/index.html) | `glass-calculator/` | CSS Variables, Audio Synth | Theme-switching calculator featuring synthesized keyclick tones. |
-| 26 | [Card Study Deck](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/study-deck/index.html) | `study-deck/` | 3D Transforms, LocalStorage | Study tool allowing custom question card deck creation and storage. |
-| 30 | [Visual Sorting Simulator](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/sorting-visualizer/index.html) | `sorting-visualizer/` | Promises, Animations | Visualizes Bubble, Selection, and Insertion sorts on arrays. |
-| 31 | [Voice Sticky Notes](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/voice-stickies/index.html) | `voice-stickies/` | Speech Recognition, Drag & Drop | Absolute positioned draggable post-it pads created via speech voice. |
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/RUBANRAJS-hub/javascript-project.git
+   cd javascript-project
+   ```
+2. **Start a local HTTP server**:
+   If you have Python installed, launch the server in the root folder:
+   ```bash
+   python -m http.server 3000
+   ```
+3. **Launch in Browser**:
+   Open **[http://localhost:3000/](http://localhost:3000/)** to access the interactive hub.
 
 ---
 
-## 🎨 Hub Design Details
+## 🎮 Project Categories
 
-The Hub Dashboard is styled using:
-* **Glassmorphic Layout**: Translucent dark surfaces with soft borders (`backdrop-filter: blur(16px)`).
-* **Dynamic Search & Filters**: Instantly filter projects by tags, categories, or keywords.
-* **Modern Typography**: Integrated using the Google font "Inter" for a clean, professional aesthetic.
+### 🎮 Games
+* **Hangman Game** (07): Word guessing game with animated SVG stick figure.
+* **Typing Game** (12): High-speed typing clock-beater with local score saves.
+* **Memory Cards** (14): Slide deck study cards utilizing 3D card flips.
+* **Breakout Game** (17): Classic canvas brick-breaker with paddle physics.
+* **Speak Guess** (19): Voice-controlled number matching helper.
+* **RGB Guesser** (24): Color grid guessing game to practice RGB color structures.
+* **Pixel Artboard** (25): 8-bit draw board with custom canvas grid colors and PNG export.
+
+### 🌐 API Integrations
+* **Exchange Rate** (04): Double currency converter using exchange rate feeds.
+* **Meal Finder** (08): Search dishes and recipes using meal databases.
+* **Infinite Scroll** (11): Continuous posts scroller.
+* **Lyrics Search** (15): Song search with pagination and previews.
+* **QR Generator** (27): Dynamic QR code generator with sizing filters.
+* **Weather Widget** (28): Weather dashboard that changes site themes based on weather.
+
+### 🔊 Media & Speech
+* **Video Player** (03): Video player with styled custom scrubbers.
+* **Music Player** (10): Audio player featuring song rotation.
+* **Speech Reader** (13): Text reader using dynamic synthesis voices.
+* **Pomodoro Sounds** (23): Focus timer with synthesized rain and wave noise.
+* **Text Reader** (29): Statistics generator with voice playback control.
+
+---
+
+## 📋 All 31 Projects
+
+| ID | Project Name | Directory | Tech Stack / APIs |
+|:---:|:---|:---|:---|
+| 01 | [Form Validator](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/form-validator/index.html) | `form-validator/` | DOM Validation, Regex, CSS |
+| 02 | [Movie Seat Booking](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/movie-seat-booking/index.html) | `movie-seat-booking/` | LocalStorage, SVG Layouts |
+| 03 | [Custom Video Player](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/custom-video-player/index.html) | `custom-video-player/` | HTML5 Video Media API |
+| 04 | [Exchange Rate Calculator](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/exchange-rate/index.html) | `exchange-rate/` | Fetch API, Dynamic Flags |
+| 05 | [DOM Array Methods](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/dom-array-methods/index.html) | `dom-array-methods/` | Array Helpers, API Fetch |
+| 06 | [Menu Slider & Modal](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/modal-menu-slider/index.html) | `modal-menu-slider/` | CSS Overlays, Slide Events |
+| 07 | [Hangman Game](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/hangman/index.html) | `hangman/` | SVG graphics, keydown events |
+| 08 | [Mealfinder App](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/meal-finder/index.html) | `meal-finder/` | Fetch API, Recipe Searches |
+| 09 | [Expense Tracker](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/expense-tracker/index.html) | `expense-tracker/` | LocalStorage, Budget calculations |
+| 10 | [Music Player](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/music-player/index.html) | `music-player/` | HTML5 Audio Media API |
+| 11 | [Infinite Scroll Blog](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/infinite_scroll_blog/index.html) | `infinite_scroll_blog/` | Fetch API, Scroll calculations |
+| 12 | [Typing Game](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/typing-game/index.html) | `typing-game/` | JavaScript timers, LocalStorage |
+| 13 | [Speech Text Reader](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/speech-text-reader/index.html) | `speech-text-reader/` | Web Speech API (Synthesis) |
+| 14 | [Memory Cards](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/memory-cards/index.html) | `memory-cards/` | CSS 3D Transforms, LocalStorage |
+| 15 | [Lyrics Search App](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/lyrics-search/index.html) | `lyrics-search/` | Lyrist API fetches, pagination |
+| 16 | [Relaxer App](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/relaxer-app/index.html) | `relaxer-app/` | CSS Animation timelines, timers |
+| 17 | [Breakout Game](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/breakout-game/index.html) | `breakout-game/` | HTML5 Canvas, 2D physics |
+| 18 | [New Year Countdown](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/new-year-countdown/index.html) | `new-year-countdown/` | Date Objects, CSS spinners |
+| 19 | [Speak Number Guess](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/speak-number-guess/index.html) | `speak-number-guess/` | Web Speech API (Recognition) |
+| 20 | [Product Filtering UI](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/product-filtering/index.html) | `product-filtering/` | Array filters, search bars |
+| 21 | [Sortable List](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/sortable-list/index.html) | `sortable-list/` | HTML5 Drag & Drop API |
+| 22 | [Glassmorphic Calculator](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/glass-calculator/index.html) | `glass-calculator/` | CSS variables, Web Audio Synthesizer |
+| 23 | [Pomodoro & Ambient Sounds](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/pomodoro-sounds/index.html) | `pomodoro-sounds/` | Synthesized rain & wave oscillators |
+| 24 | [RGB Color Guessing Game](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/rgb-guesser/index.html) | `rgb-guesser/` | Math operations, element grids |
+| 25 | [Pixel Art Draw Board](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/pixel-artboard/index.html) | `pixel-artboard/` | Canvas drawings, flood-fill algorithm |
+| 26 | [Card Study Deck](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/study-deck/index.html) | `study-deck/` | 3D rotations, LocalStorage saving |
+| 27 | [QR Code Generator](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/qr-generator/index.html) | `qr-generator/` | QRserver API, download blobs |
+| 28 | [Weather & Dynamic Theme](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/weather-theme/index.html) | `weather-theme/` | Dynamic UI themes, weather databases |
+| 29 | [Text Analyzer & Reader](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/text-analyzer/index.html) | `text-analyzer/` | String calculations, Speech synthesis |
+| 30 | [Visual Sorting Simulator](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/sorting-visualizer/index.html) | `sorting-visualizer/` | Promises, animated array delays |
+| 31 | [Voice Sticky Notes](file:///c:/Users/HP/Downloads/vanillawebprojects-master/javascript/voice-stickies/index.html) | `voice-stickies/` | SpeechRecognition dictations, Dragging |
+
+---
+
+## 📈 Repository Stats
+
+<p align="center">
+  <img src="https://github-readme-stats.vercel.app/api?username=RUBANRAJS-hub&show_icons=true&theme=dark&hide_border=true" alt="GitHub Stats"/>
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=RUBANRAJS-hub&layout=compact&theme=dark&hide_border=true" alt="Top Languages"/>
+</p>
+
+---
+
+## 🤝 Contribution
+
+Contributions are always welcome!
+1. Fork the Project.
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the Branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
+
+---
+
+## 📄 License
+
+Distributed under the **MIT License**. See `LICENSE` for more information.
+
+---
+
+## 👨‍💻 About Me
+
+* **GitHub**: [@RUBANRAJS-hub](https://github.com/RUBANRAJS-hub)
+* **Design Philosophy**: High-fidelity UI layouts, glassmorphism, and clean code optimization.
+
+---
+
+<p align="center">
+  <strong>Made with ❤️ by Ruban Raj S</strong>
+</p>
