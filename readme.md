@@ -22,6 +22,69 @@ To start the local development server and access the interactive projects hub:
 
 ---
 
+## 🎨 Visual Project Architecture (Mermaid Graph)
+
+Here is a visual breakdown of all 31 projects organized by their primary capabilities and categories:
+
+```mermaid
+flowchart TD
+    %% Custom Styles %%
+    classDef games fill:#f472b6,stroke:#db2777,stroke-width:2px,color:#fff;
+    classDef apis fill:#38bdf8,stroke:#0284c7,stroke-width:2px,color:#fff;
+    classDef media fill:#34d399,stroke:#059669,stroke-width:2px,color:#fff;
+    classDef dom fill:#a78bfa,stroke:#7c3aed,stroke-width:2px,color:#fff;
+    classDef core fill:#f59e0b,stroke:#d97706,stroke-width:2px,color:#fff;
+
+    Hub([Ruban JS Projects Hub]):::core
+
+    %% Categories %%
+    Hub --> Games[🎮 7 Games]:::games
+    Hub --> APIs[🌐 6 API Integrations]:::apis
+    Hub --> Media[🔊 5 Media & Speech]:::media
+    Hub --> Utilities[🛠️ 13 DOM & Utilities]:::dom
+
+    %% Games Branch %%
+    Games --> G1[Hangman Game]:::games
+    Games --> G2[Typing Game]:::games
+    Games --> G3[Memory Cards]:::games
+    Games --> G4[Breakout Game]:::games
+    Games --> G5[Speak Guess]:::games
+    Games --> G6[RGB Guesser]:::games
+    Games --> G7[Pixel Artboard]:::games
+
+    %% APIs Branch %%
+    APIs --> A1[Exchange Rate]:::apis
+    APIs --> A2[Meal Finder]:::apis
+    APIs --> A3[Infinite Scroll]:::apis
+    APIs --> A4[Lyrics Search]:::apis
+    APIs --> A5[QR Generator]:::apis
+    APIs --> A6[Weather Dashboard]:::apis
+
+    %% Media Branch %%
+    Media --> M1[Video Player]:::media
+    Media --> M2[Music Player]:::media
+    Media --> M3[Speech Reader]:::media
+    Media --> M4[Pomodoro Sounds]:::media
+    Media --> M5[Text Reader]:::media
+
+    %% Utilities Branch %%
+    Utilities --> U1[Form Validator]:::dom
+    Utilities --> U2[Seat Booking]:::dom
+    Utilities --> U3[DOM Arrays]:::dom
+    Utilities --> U4[Menu Slider]:::dom
+    Utilities --> U5[Expense Tracker]:::dom
+    Utilities --> U6[Relaxer App]:::dom
+    Utilities --> U7[Countdown]:::dom
+    Utilities --> U8[Product Filter]:::dom
+    Utilities --> U9[Sortable List]:::dom
+    Utilities --> U10[Calculator]:::dom
+    Utilities --> U11[Study Deck]:::dom
+    Utilities --> U12[Sort Visualizer]:::dom
+    Utilities --> U13[Voice Notes]:::dom
+```
+
+---
+
 ## 📁 Project Catalog & Specifications
 
 Below is the complete analysis and specification table of the 31 registered projects, organized by category:
