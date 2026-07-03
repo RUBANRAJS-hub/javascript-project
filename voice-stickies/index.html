@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voice Sticky Notes</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #f1f5f9;
+      --text-muted: #64748b;
+      --primary: #ec4899;
+      --primary-hover: #db2777;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(236, 72, 153, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(56, 189, 248, 0.03) 0%, transparent 40%);
+      color: var(--text);
+      min-height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(9, 13, 22, 0.7);
+      backdrop-filter: blur(12px);
+      z-index: 10;
+      position: relative;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 40%, #f472b6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Board Area */
+    .board {
+      width: 100%;
+      height: calc(100vh - 80px);
+      position: relative;
+    }
+
+    /* Sticky Note */
+    .sticky-note {
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 16px;
+      padding: 1.25rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      cursor: grab;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: box-shadow 0.2s, transform 0.2s;
+      transform-origin: center;
+    }
+
+    .sticky-note:active {
+      cursor: grabbing;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+      transform: scale(1.02);
+    }
+
+    /* Sticky colors */
+    .color-yellow { background: #fef08a; color: #854d0e; }
+    .color-blue { background: #bae6fd; color: #075985; }
+    .color-green { background: #bbf7d0; color: #166534; }
+    .color-pink { background: #fbcfe8; color: #9d174d; }
+
+    .sticky-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      opacity: 0.6;
+    }
+
+    .delete-note {
+      background: transparent;
+      border: none;
+      color: inherit;
+      font-size: 1.1rem;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .sticky-content {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: transparent;
+      color: inherit;
+      font-family: inherit;
+      font-size: 1.05rem;
+      font-weight: 500;
+      resize: none;
+      outline: none;
+      line-height: 1.4;
+    }
+
+    .sticky-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .speak-btn {
+      background: rgba(0,0,0,0.08);
+      border: 1px solid rgba(0,0,0,0.1);
+      color: inherit;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+
+    .speak-btn.active {
+      background: #ef4444;
+      color: white;
+      border-color: #ef4444;
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .back-btn {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      margin-right: 1.5rem;
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display: flex; align-items: center;">
+      <a href="../index.html" class="back-btn">← Back to Hub</a>
+      <h1>Voice Sticky Notes</h1>
+    </div>
+    
+    <div class="btn-group">
+      <button class="btn btn-secondary" id="clearNotesBtn">Clear All</button>
+      <button class="btn" id="addNoteBtn">➕ Add Note</button>
+    </div>
+  </header>
+
+  <div class="board" id="board">
+    <!-- Notes will be loaded here -->
+  </div>
+
+  <script>
+    const board = document.getElementById('board');
+    const addNoteBtn = document.getElementById('addNoteBtn');
+    const clearNotesBtn = document.getElementById('clearNotesBtn');
+
+    let notes = [];
+
+    // Speech Recognition setup
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition = null;
+    if (SpeechRecognition) {
+      recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-US';
+    }
+
+    // Load notes from LocalStorage
+    function loadNotes() {
+      const stored = localStorage.getItem('voice_sticky_notes');
+      if (stored) {
+        notes = JSON.parse(stored);
+        notes.forEach(note => createNoteElement(note));
+      } else {
+        // Initial notes
+        const defaultNotes = [
+          { id: 1, text: "Drag me around the board!", x: 100, y: 100, color: "yellow" },
+          { id: 2, text: "Click the 🎙️ mic button and speak to dictate content into this sticky note!", x: 400, y: 150, color: "pink" }
+        ];
+        notes = defaultNotes;
+        saveNotes();
+        notes.forEach(note => createNoteElement(note));
+      }
+    }
+
+    function saveNotes() {
+      localStorage.setItem('voice_sticky_notes', JSON.stringify(notes));
+    }
+
+    function createNoteElement(note) {
+      const el = document.createElement('div');
+      el.className = `sticky-note color-${note.color}`;
+      el.id = `note-${note.id}`;
+      el.style.left = `${note.x}px`;
+      el.style.top = `${note.y}px`;
+
+      el.innerHTML = `
+        <div class="sticky-header">
+          <span>Sticky Note</span>
+          <button class="delete-note" onclick="deleteNote(${note.id})">×</button>
+        </div>
+        <textarea class="sticky-content" placeholder="Type here...">${note.text}</textarea>
+        <div class="sticky-footer">
+          <button class="speak-btn" title="Dictate voice notes" id="mic-${note.id}">🎙️</button>
+        </div>
+      `;
+
+      // Textarea autosave
+      const textarea = el.querySelector('.sticky-content');
+      textarea.addEventListener('input', () => {
+        note.text = textarea.value;
+        saveNotes();
+      });
+
+      // Speech recognition dictation trigger
+      const micBtn = el.querySelector('.speak-btn');
+      if (recognition) {
+        micBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          
+          if (micBtn.classList.contains('active')) {
+            recognition.stop();
+          } else {
+            // Deactivate other mics
+            document.querySelectorAll('.speak-btn').forEach(btn => btn.classList.remove('active'));
+            
+            micBtn.classList.add('active');
+            recognition.onresult = (event) => {
+              const resultText = event.results[0][0].transcript;
+              textarea.value = (textarea.value + " " + resultText).trim();
+              note.text = textarea.value;
+              saveNotes();
+            };
+
+            recognition.onend = () => {
+              micBtn.classList.remove('active');
+            };
+
+            recognition.onerror = () => {
+              micBtn.classList.remove('active');
+            };
+
+            recognition.start();
+          }
+        });
+      } else {
+        micBtn.style.display = 'none';
+      }
+
+      // Drag and drop implementation
+      let isDragging = false;
+      let offsetX, offsetY;
+
+      el.addEventListener('mousedown', (e) => {
+        if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON') return;
+        isDragging = true;
+        
+        // bring note to front
+        board.appendChild(el);
+
+        offsetX = e.clientX - el.offsetLeft;
+        offsetY = e.clientY - el.offsetTop;
+      });
+
+      document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        
+        let newX = e.clientX - offsetX;
+        let newY = e.clientY - offsetY;
+
+        // check board bounds
+        newX = Math.max(0, Math.min(newX, window.innerWidth - el.clientWidth));
+        newY = Math.max(0, Math.min(newY, window.innerHeight - 80 - el.clientHeight));
+
+        el.style.left = `${newX}px`;
+        el.style.top = `${newY}px`;
+        
+        note.x = newX;
+        note.y = newY;
+      });
+
+      document.addEventListener('mouseup', () => {
+        if (isDragging) {
+          isDragging = false;
+          saveNotes();
+        }
+      });
+
+      board.appendChild(el);
+    }
+
+    addNoteBtn.addEventListener('click', () => {
+      const colors = ['yellow', 'blue', 'green', 'pink'];
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+      const id = Date.now();
+      
+      const newNote = {
+        id,
+        text: "",
+        x: Math.floor(Math.random() * (window.innerWidth - 300)) + 50,
+        y: Math.floor(Math.random() * (window.innerHeight - 380)) + 50,
+        color: randomColor
+      };
+
+      notes.push(newNote);
+      saveNotes();
+      createNoteElement(newNote);
+    });
+
+    window.deleteNote = function(id) {
+      notes = notes.filter(n => n.id !== id);
+      saveNotes();
+      const el = document.getElementById(`note-${id}`);
+      if (el) el.remove();
+    };
+
+    clearNotesBtn.addEventListener('click', () => {
+      if (confirm("Are you sure you want to delete all sticky notes?")) {
+        notes = [];
+        saveNotes();
+        board.innerHTML = '';
+      }
+    });
+
+    // Start loading notes
+    loadNotes();
+  </script>
+</body>
+</html>

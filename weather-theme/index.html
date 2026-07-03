@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Dashboard & Dynamic Theme</title>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #1e293b, #0f172a);
+      --glass-bg: rgba(30, 41, 59, 0.4);
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+    }
+
+    /* Sunny Theme */
+    .theme-sunny {
+      --bg-gradient: linear-gradient(135deg, #f59e0b, #d97706, #1e1b4b);
+      --glass-bg: rgba(251, 191, 36, 0.2);
+      --border: rgba(255, 255, 255, 0.15);
+      --accent: #fef08a;
+    }
+
+    /* Rainy Theme */
+    .theme-rainy {
+      --bg-gradient: linear-gradient(135deg, #3b82f6, #1d4ed8, #0f172a);
+      --glass-bg: rgba(59, 130, 246, 0.15);
+      --border: rgba(255, 255, 255, 0.08);
+      --accent: #93c5fd;
+    }
+
+    /* Snowy Theme */
+    .theme-snowy {
+      --bg-gradient: linear-gradient(135deg, #93c5fd, #60a5fa, #1e293b);
+      --glass-bg: rgba(255, 255, 255, 0.15);
+      --border: rgba(255, 255, 255, 0.2);
+      --accent: #ffffff;
+      --text: #0f172a;
+      --text-muted: #334155;
+    }
+
+    /* Stormy Theme */
+    .theme-stormy {
+      --bg-gradient: linear-gradient(135deg, #4b5563, #1f2937, #030712);
+      --glass-bg: rgba(17, 24, 39, 0.6);
+      --border: rgba(255, 255, 255, 0.05);
+      --accent: #facc15;
+    }
+
+    /* Cloudy Theme */
+    .theme-cloudy {
+      --bg-gradient: linear-gradient(135deg, #64748b, #475569, #0f172a);
+      --glass-bg: rgba(100, 116, 139, 0.25);
+      --border: rgba(255, 255, 255, 0.08);
+      --accent: #cbd5e1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+      transition: all 0.5s ease-out;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      position: relative;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 450px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .weather-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 2.5rem 2rem;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 0.5rem;
+      background: rgba(0, 0, 0, 0.15);
+      border: 1px solid var(--border);
+      padding: 0.4rem;
+      border-radius: 16px;
+      margin-bottom: 2rem;
+    }
+
+    .search-box input {
+      background: transparent;
+      border: none;
+      color: inherit;
+      padding: 0.6rem;
+      font-size: 1rem;
+      flex-grow: 1;
+      outline: none;
+    }
+
+    .search-box input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-box button {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    /* Weather Visuals */
+    .city {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 0.25rem;
+    }
+
+    .date {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .weather-icon {
+      font-size: 5rem;
+      margin-bottom: 1rem;
+      filter: drop-shadow(0 8px 12px rgba(0,0,0,0.15));
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .temp {
+      font-size: 4rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .weather-desc {
+      font-size: 1.25rem;
+      font-weight: 600;
+      text-transform: capitalize;
+      color: var(--accent);
+      margin-bottom: 2rem;
+    }
+
+    /* Grid Info */
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      background: rgba(0, 0, 0, 0.1);
+      padding: 1.25rem;
+      border-radius: 18px;
+    }
+
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      text-align: left;
+    }
+
+    .detail-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    .detail-value {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 1.5rem;
+      left: 1.5rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <a href="../index.html" class="back-btn">← Back to Hub</a>
+
+  <div class="container">
+    <div class="weather-card">
+      <div class="search-box">
+        <input type="text" id="cityInput" placeholder="Enter city (e.g. London, Cairo...)" value="London">
+        <button id="searchBtn">Check</button>
+      </div>
+
+      <div class="weather-info">
+        <h2 class="city" id="cityName">London</h2>
+        <div class="date" id="date">Friday, 10:00 AM</div>
+        <div class="weather-icon" id="weatherIcon">⛅</div>
+        <div class="temp"><span id="tempValue">18</span>°C</div>
+        <div class="weather-desc" id="weatherDesc">Scattered Clouds</div>
+
+        <div class="details-grid">
+          <div class="detail-item">
+            <span class="detail-label">💨 Wind Speed</span>
+            <span class="detail-value" id="wind">14 km/h</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">💧 Humidity</span>
+            <span class="detail-value" id="humidity">65%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const cityInput = document.getElementById('cityInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const cityName = document.getElementById('cityName');
+    const dateText = document.getElementById('date');
+    const weatherIcon = document.getElementById('weatherIcon');
+    const tempValue = document.getElementById('tempValue');
+    const weatherDesc = document.getElementById('weatherDesc');
+    const wind = document.getElementById('wind');
+    const humidity = document.getElementById('humidity');
+
+    // Preset Cities
+    const cityDatabase = {
+      london: { name: "London", temp: 15, condition: "cloudy", desc: "Scattered Clouds", wind: 12, humidity: 80 },
+      tokyo: { name: "Tokyo", temp: 22, condition: "sunny", desc: "Bright and Sunny", wind: 8, humidity: 55 },
+      paris: { name: "Paris", temp: 19, condition: "rainy", desc: "Light Rain Showers", wind: 16, humidity: 90 },
+      sydney: { name: "Sydney", temp: 24, condition: "sunny", desc: "Sunny Skies", wind: 14, humidity: 45 },
+      moscow: { name: "Moscow", temp: -4, condition: "snowy", desc: "Moderate Snowfall", wind: 18, humidity: 85 },
+      cairo: { name: "Cairo", temp: 36, condition: "sunny", desc: "Hot Desert Sun", wind: 6, humidity: 20 },
+      reykjavik: { name: "Reykjavik", temp: 2, condition: "snowy", desc: "Blizzard Warning", wind: 28, humidity: 95 },
+      mumbai: { name: "Mumbai", temp: 31, condition: "stormy", desc: "Heavy Monsoon Thunderstorm", wind: 24, humidity: 92 }
+    };
+
+    function updateWeather(cityQuery) {
+      const cleanQuery = cityQuery.toLowerCase().trim();
+      let data = cityDatabase[cleanQuery];
+
+      // If city not found, generate realistic randomized weather data based on city name string hash code
+      if (!data) {
+        let hash = 0;
+        for (let i = 0; i < cleanQuery.length; i++) {
+          hash = cleanQuery.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const temp = Math.floor(Math.abs(Math.sin(hash)) * 45) - 5; // -5 to 40
+        const conditions = ['sunny', 'cloudy', 'rainy', 'snowy', 'stormy'];
+        const condition = conditions[Math.abs(hash) % conditions.length];
+        
+        let desc = "Clear Skies";
+        if (condition === 'cloudy') desc = "Overcast Clouds";
+        if (condition === 'rainy') desc = "Steady Drizzle";
+        if (condition === 'snowy') desc = "Light Flurries";
+        if (condition === 'stormy') desc = "Severe Thunderstorms";
+
+        data = {
+          name: cityQuery.charAt(0).toUpperCase() + cityQuery.slice(1),
+          temp,
+          condition,
+          desc,
+          wind: Math.floor(Math.abs(Math.cos(hash)) * 30) + 2,
+          humidity: Math.floor(Math.abs(Math.sin(hash)) * 80) + 15
+        };
+      }
+
+      // Update elements
+      cityName.textContent = data.name;
+      tempValue.textContent = data.temp;
+      weatherDesc.textContent = data.desc;
+      wind.textContent = `${data.wind} km/h`;
+      humidity.textContent = `${data.humidity}%`;
+
+      // Update condition icon and body classes
+      let icon = "☀️";
+      let themeClass = "theme-sunny";
+
+      if (data.condition === 'cloudy') {
+        icon = "⛅";
+        themeClass = "theme-cloudy";
+      } else if (data.condition === 'rainy') {
+        icon = "🌧️";
+        themeClass = "theme-rainy";
+      } else if (data.condition === 'snowy') {
+        icon = "❄️";
+        themeClass = "theme-snowy";
+      } else if (data.condition === 'stormy') {
+        icon = "⚡";
+        themeClass = "theme-stormy";
+      }
+
+      weatherIcon.textContent = icon;
+      document.body.className = themeClass;
+
+      // Update Date
+      const date = new Date();
+      const options = { weekday: 'long', hour: '2-digit', minute: '2-digit' };
+      dateText.textContent = date.toLocaleDateString('en-US', options);
+    }
+
+    searchBtn.addEventListener('click', () => {
+      if (cityInput.value) {
+        updateWeather(cityInput.value);
+      }
+    });
+
+    cityInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && cityInput.value) {
+        updateWeather(cityInput.value);
+      }
+    });
+
+    // Start with default city
+    updateWeather('London');
+  </script>
+</body>
+</html>

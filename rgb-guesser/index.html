@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RGB Color Guessing Game</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.4);
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #6366f1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .color-display {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2.5rem;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin: 1rem 0;
+      color: #6366f1;
+    }
+
+    .nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .score {
+      font-weight: 700;
+      color: #10b981;
+    }
+
+    .message {
+      font-weight: 600;
+      min-height: 1.5rem;
+      font-size: 1.1rem;
+    }
+
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-top: 1rem;
+    }
+
+    .color-card {
+      aspect-ratio: 1;
+      border-radius: 16px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s, opacity 0.3s;
+    }
+
+    .color-card:hover {
+      transform: scale(1.05);
+    }
+
+    .color-card.wrong {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.9);
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 1.5rem;
+      left: 1.5rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <a href="../index.html" class="back-btn">← Back to Hub</a>
+
+  <div class="container">
+    <header>
+      <h1>RGB Color Guesser</h1>
+      <p class="message" id="message">Find the matching color square!</p>
+    </header>
+
+    <div class="color-display" id="rgbText">RGB(0, 0, 0)</div>
+
+    <div class="nav-bar">
+      <button class="nav-btn" id="resetBtn">New Colors</button>
+      <div>
+        <button class="nav-btn" id="easyBtn">Easy</button>
+        <button class="nav-btn active" id="hardBtn">Hard</button>
+      </div>
+      <div>Score: <span class="score" id="scoreValue">0</span></div>
+    </div>
+
+    <div class="color-grid" id="colorGrid">
+      <!-- Grid items generated dynamically -->
+    </div>
+  </div>
+
+  <script>
+    let numCards = 6;
+    let colors = [];
+    let pickedColor;
+    let score = 0;
+
+    const rgbText = document.getElementById("rgbText");
+    const colorGrid = document.getElementById("colorGrid");
+    const message = document.getElementById("message");
+    const scoreValue = document.getElementById("scoreValue");
+    const resetBtn = document.getElementById("resetBtn");
+    const easyBtn = document.getElementById("easyBtn");
+    const hardBtn = document.getElementById("hardBtn");
+
+    function randomColor() {
+      const r = Math.floor(Math.random() * 256);
+      const g = Math.floor(Math.random() * 256);
+      const b = Math.floor(Math.random() * 256);
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    function generateRandomColors(num) {
+      const arr = [];
+      for (let i = 0; i < num; i++) {
+        arr.push(randomColor());
+      }
+      return arr;
+    }
+
+    function pickColor() {
+      const random = Math.floor(Math.random() * colors.length);
+      return colors[random];
+    }
+
+    function initGame() {
+      colors = generateRandomColors(numCards);
+      pickedColor = pickColor();
+      rgbText.textContent = pickedColor;
+      message.textContent = "Find the matching color square!";
+      colorGrid.innerHTML = "";
+
+      colors.forEach(color => {
+        const card = document.createElement("div");
+        card.className = "color-card";
+        card.style.backgroundColor = color;
+        
+        card.addEventListener("click", () => {
+          if (color === pickedColor) {
+            message.textContent = "Correct! 🎉";
+            message.style.color = "#10b981";
+            score++;
+            scoreValue.textContent = score;
+            setAllColors(pickedColor);
+          } else {
+            card.classList.add("wrong");
+            message.textContent = "Try again!";
+            message.style.color = "#ef4444";
+            if (score > 0) score--;
+            scoreValue.textContent = score;
+          }
+        });
+        
+        colorGrid.appendChild(card);
+      });
+    }
+
+    function setAllColors(color) {
+      document.querySelectorAll(".color-card").forEach(card => {
+        card.classList.remove("wrong");
+        card.style.opacity = 1;
+        card.style.backgroundColor = color;
+      });
+    }
+
+    resetBtn.addEventListener("click", () => {
+      initGame();
+    });
+
+    easyBtn.addEventListener("click", () => {
+      easyBtn.classList.add("active");
+      hardBtn.classList.remove("active");
+      numCards = 3;
+      initGame();
+    });
+
+    hardBtn.addEventListener("click", () => {
+      hardBtn.classList.add("active");
+      easyBtn.classList.remove("active");
+      numCards = 6;
+      initGame();
+    });
+
+    // Start Game
+    initGame();
+  </script>
+</body>
+</html>

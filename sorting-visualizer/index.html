@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visual Sorting Simulator</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: rgba(17, 24, 39, 0.6);
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --primary: #a78bfa;
+      --primary-hover: #8b5cf6;
+      --primary-glow: rgba(167, 139, 250, 0.35);
+      --accent: #34d399;
+      --compare: #f59e0b;
+      --swap: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    header {
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 40%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .visualizer-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 2rem;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .control-panel {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(0,0,0,0.25);
+      padding: 1rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+    }
+
+    .slider-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .slider-group input {
+      accent-color: var(--primary);
+      width: 100px;
+      cursor: pointer;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: #000;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--primary-hover);
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text);
+    }
+
+    /* Bars Container */
+    .bars-container {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 3px;
+      height: 300px;
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 16px;
+      padding: 1rem;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .bar {
+      flex: 1;
+      background-color: var(--primary);
+      border-radius: 3px 3px 0 0;
+      transition: height 0.05s ease;
+      min-width: 2px;
+    }
+
+    /* Algorithm Selection */
+    .alg-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .alg-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.6rem 1.25rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .alg-btn:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .alg-btn.active {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+      box-shadow: 0 0 10px rgba(52, 211, 153, 0.4);
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 1.5rem;
+      left: 1.5rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <a href="../index.html" class="back-btn">← Back to Hub</a>
+
+  <div class="container">
+    <header>
+      <h1>Visual Sorting Simulator</h1>
+      <p style="color: var(--text-muted); margin-top: 0.25rem;">Observe how sorting algorithms organize data step-by-step</p>
+    </header>
+
+    <div class="visualizer-card">
+      <div class="control-panel">
+        <div class="slider-group">
+          <span>Array Size</span>
+          <input type="range" id="sizeSlider" min="10" max="80" value="40">
+        </div>
+
+        <div class="slider-group">
+          <span>Speed</span>
+          <input type="range" id="speedSlider" min="10" max="1000" value="200">
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-secondary" id="randomizeBtn">Randomize Array</button>
+          <button class="btn" id="sortBtn">Start Sorting</button>
+        </div>
+      </div>
+
+      <div class="alg-buttons">
+        <button class="alg-btn active" data-alg="bubble">Bubble Sort</button>
+        <button class="alg-btn" data-alg="selection">Selection Sort</button>
+        <button class="alg-btn" data-alg="insertion">Insertion Sort</button>
+      </div>
+
+      <div class="bars-container" id="barsContainer">
+        <!-- Bars are loaded dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const barsContainer = document.getElementById('barsContainer');
+    const sizeSlider = document.getElementById('sizeSlider');
+    const speedSlider = document.getElementById('speedSlider');
+    const randomizeBtn = document.getElementById('randomizeBtn');
+    const sortBtn = document.getElementById('sortBtn');
+    const algButtons = document.querySelectorAll('.alg-btn');
+
+    let array = [];
+    let isSorting = false;
+    let selectedAlg = 'bubble';
+
+    // Generate random array
+    function generateArray() {
+      if (isSorting) return;
+      const size = parseInt(sizeSlider.value);
+      array = [];
+      for (let i = 0; i < size; i++) {
+        array.push(Math.floor(Math.random() * 250) + 15); // min 15, max 265
+      }
+      renderBars();
+    }
+
+    function renderBars() {
+      barsContainer.innerHTML = '';
+      array.forEach(val => {
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        bar.style.height = `${val}px`;
+        barsContainer.appendChild(bar);
+      });
+    }
+
+    // Delay helper
+    function delay() {
+      // Invert speed value so higher is faster
+      const speed = 1010 - parseInt(speedSlider.value);
+      return new Promise(resolve => setTimeout(resolve, speed));
+    }
+
+    // Toggle alg selection
+    algButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (isSorting) return;
+        algButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedAlg = btn.dataset.alg;
+      });
+    });
+
+    sizeSlider.addEventListener('input', generateArray);
+    randomizeBtn.addEventListener('click', generateArray);
+
+    sortBtn.addEventListener('click', async () => {
+      if (isSorting) return;
+      isSorting = true;
+      toggleControls(true);
+
+      if (selectedAlg === 'bubble') {
+        await bubbleSort();
+      } else if (selectedAlg === 'selection') {
+        await selectionSort();
+      } else if (selectedAlg === 'insertion') {
+        await insertionSort();
+      }
+
+      isSorting = false;
+      toggleControls(false);
+    });
+
+    function toggleControls(disable) {
+      sizeSlider.disabled = disable;
+      randomizeBtn.disabled = disable;
+      sortBtn.disabled = disable;
+      algButtons.forEach(b => b.disabled = disable);
+      sortBtn.textContent = disable ? 'Sorting...' : 'Start Sorting';
+    }
+
+    // Color updating helpers
+    function setBarColor(index, color) {
+      const bars = barsContainer.children;
+      if (bars[index]) {
+        bars[index].style.backgroundColor = color;
+      }
+    }
+
+    // Bubble Sort
+    async function bubbleSort() {
+      const bars = barsContainer.children;
+      const n = array.length;
+      for (let i = 0; i < n - 1; i++) {
+        for (let j = 0; j < n - i - 1; j++) {
+          setBarColor(j, 'var(--compare)');
+          setBarColor(j + 1, 'var(--compare)');
+          await delay();
+
+          if (array[j] > array[j + 1]) {
+            setBarColor(j, 'var(--swap)');
+            setBarColor(j + 1, 'var(--swap)');
+            await delay();
+
+            // Swap values
+            let temp = array[j];
+            array[j] = array[j + 1];
+            array[j + 1] = temp;
+
+            bars[j].style.height = `${array[j]}px`;
+            bars[j + 1].style.height = `${array[j + 1]}px`;
+            await delay();
+          }
+
+          setBarColor(j, 'var(--primary)');
+          setBarColor(j + 1, 'var(--primary)');
+        }
+        setBarColor(n - i - 1, 'var(--accent)');
+      }
+      setBarColor(0, 'var(--accent)');
+    }
+
+    // Selection Sort
+    async function selectionSort() {
+      const bars = barsContainer.children;
+      const n = array.length;
+      for (let i = 0; i < n - 1; i++) {
+        let minIdx = i;
+        setBarColor(minIdx, 'var(--compare)');
+        
+        for (let j = i + 1; j < n; j++) {
+          setBarColor(j, 'var(--compare)');
+          await delay();
+
+          if (array[j] < array[minIdx]) {
+            if (minIdx !== i) setBarColor(minIdx, 'var(--primary)');
+            minIdx = j;
+            setBarColor(minIdx, 'var(--swap)');
+          } else {
+            setBarColor(j, 'var(--primary)');
+          }
+        }
+
+        if (minIdx !== i) {
+          // Swap
+          let temp = array[i];
+          array[i] = array[minIdx];
+          array[minIdx] = temp;
+
+          bars[i].style.height = `${array[i]}px`;
+          bars[minIdx].style.height = `${array[minIdx]}px`;
+          await delay();
+          setBarColor(minIdx, 'var(--primary)');
+        }
+        
+        setBarColor(i, 'var(--accent)');
+      }
+      setBarColor(n - 1, 'var(--accent)');
+    }
+
+    // Insertion Sort
+    async function insertionSort() {
+      const bars = barsContainer.children;
+      const n = array.length;
+      setBarColor(0, 'var(--accent)');
+      
+      for (let i = 1; i < n; i++) {
+        let key = array[i];
+        let j = i - 1;
+        
+        setBarColor(i, 'var(--compare)');
+        await delay();
+
+        while (j >= 0 && array[j] > key) {
+          setBarColor(j, 'var(--swap)');
+          await delay();
+
+          array[j + 1] = array[j];
+          bars[j + 1].style.height = `${array[j + 1]}px`;
+          
+          setBarColor(j + 1, 'var(--accent)');
+          j = j - 1;
+        }
+        
+        array[j + 1] = key;
+        bars[j + 1].style.height = `${key}px`;
+        setBarColor(j + 1, 'var(--accent)');
+        await delay();
+      }
+    }
+
+    // Initialize array
+    generateArray();
+  </script>
+</body>
+</html>

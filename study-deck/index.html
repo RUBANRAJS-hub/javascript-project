@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Flashcards Deck</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: rgba(17, 24, 39, 0.6);
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --primary: #8b5cf6;
+      --primary-hover: #7c3aed;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 40%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .card-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-danger {
+      background: #ef4444;
+    }
+
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+
+    /* Flashcard Flip Style */
+    .flashcard-container {
+      perspective: 1000px;
+      width: 100%;
+      height: 280px;
+      cursor: pointer;
+    }
+
+    .flashcard {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .flashcard.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-front {
+      background: var(--card-bg);
+      color: var(--text);
+    }
+
+    .card-back {
+      background: rgba(30, 41, 59, 0.8);
+      color: #c084fc;
+      transform: rotateY(180deg);
+    }
+
+    .face-title {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .face-content {
+      font-size: 1.5rem;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    /* Navigation */
+    .navigation {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .nav-arrow {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      transition: all 0.2s;
+    }
+
+    .nav-arrow:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Add Card Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      z-index: 10;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background: #111827;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      width: 90%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      text-align: left;
+    }
+
+    .form-group label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .form-group textarea {
+      background: rgba(0,0,0,0.2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      padding: 0.75rem;
+      font-family: inherit;
+      resize: none;
+      height: 80px;
+      outline: none;
+    }
+
+    .form-group textarea:focus {
+      border-color: var(--primary);
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 1.5rem;
+      left: 1.5rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <a href="../index.html" class="back-btn">← Back to Hub</a>
+
+  <div class="container">
+    <header>
+      <h1>Study Flashcards</h1>
+      <p style="color: var(--text-muted); margin-top: 0.25rem;">Create a custom deck and click cards to flip them</p>
+    </header>
+
+    <div class="card-actions">
+      <button class="btn btn-danger" id="clearDeckBtn">Clear Deck</button>
+      <button class="btn" id="addCardBtn">+ Add Flashcard</button>
+    </div>
+
+    <div class="flashcard-container" id="cardContainer">
+      <div class="flashcard" id="flashcard">
+        <div class="card-face card-front">
+          <span class="face-title">Question</span>
+          <span class="face-content" id="frontText">Your Deck is Empty!</span>
+        </div>
+        <div class="card-face card-back">
+          <span class="face-title">Answer</span>
+          <span class="face-content" id="backText">Click Add Flashcard to create your first card.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="navigation">
+      <button class="nav-arrow" id="prevBtn">←</button>
+      <span id="progressText">0 / 0</span>
+      <button class="nav-arrow" id="nextBtn">→</button>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h2>Add New Flashcard</h2>
+      <div class="form-group">
+        <label for="questionInput">Question</label>
+        <textarea id="questionInput" placeholder="Enter flashcard question..."></textarea>
+      </div>
+      <div class="form-group">
+        <label for="answerInput">Answer</label>
+        <textarea id="answerInput" placeholder="Enter flashcard answer..."></textarea>
+      </div>
+      <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
+        <button class="btn btn-secondary" id="closeModalBtn" style="flex: 1;">Cancel</button>
+        <button class="btn" id="saveCardBtn" style="flex: 1;">Save Card</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const flashcard = document.getElementById('flashcard');
+    const cardContainer = document.getElementById('cardContainer');
+    const frontText = document.getElementById('frontText');
+    const backText = document.getElementById('backText');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const progressText = document.getElementById('progressText');
+    const addCardBtn = document.getElementById('addCardBtn');
+    const clearDeckBtn = document.getElementById('clearDeckBtn');
+    
+    const modalOverlay = document.getElementById('modalOverlay');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const saveCardBtn = document.getElementById('saveCardBtn');
+    const questionInput = document.getElementById('questionInput');
+    const answerInput = document.getElementById('answerInput');
+
+    let currentCardIndex = 0;
+    let cards = [];
+
+    // Load from LocalStorage
+    function getCards() {
+      const stored = localStorage.getItem('study_deck_cards');
+      return stored ? JSON.parse(stored) : [
+        { question: "What is closure in JavaScript?", answer: "A closure is the combination of a function bundled together with references to its surrounding state." },
+        { question: "What is Web Audio API used for?", answer: "It is a high-level JS API for synthesizing, processing, and controlling audio in web applications." },
+        { question: "How does LocalStorage work?", answer: "It allows web applications to store key-value data in a web browser with no expiration date." }
+      ];
+    }
+
+    function saveCards() {
+      localStorage.setItem('study_deck_cards', JSON.stringify(cards));
+    }
+
+    function updateCardDisplay() {
+      if (cards.length === 0) {
+        frontText.textContent = "Your Deck is Empty!";
+        backText.textContent = "Click Add Flashcard to create your first card.";
+        progressText.textContent = "0 / 0";
+        return;
+      }
+      
+      const current = cards[currentCardIndex];
+      frontText.textContent = current.question;
+      backText.textContent = current.answer;
+      progressText.textContent = `${currentCardIndex + 1} / ${cards.length}`;
+      
+      // Make sure card resets flip state on change
+      flashcard.classList.remove('flipped');
+    }
+
+    // Flipping
+    cardContainer.addEventListener('click', () => {
+      flashcard.classList.toggle('flipped');
+    });
+
+    // Navigation
+    prevBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (cards.length === 0) return;
+      currentCardIndex = (currentCardIndex - 1 + cards.length) % cards.length;
+      updateCardDisplay();
+    });
+
+    nextBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (cards.length === 0) return;
+      currentCardIndex = (currentCardIndex + 1) % cards.length;
+      updateCardDisplay();
+    });
+
+    // Add Card Modal triggers
+    addCardBtn.addEventListener('click', () => {
+      modalOverlay.classList.add('open');
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+      modalOverlay.classList.remove('open');
+    });
+
+    saveCardBtn.addEventListener('click', () => {
+      const question = questionInput.value.trim();
+      const answer = answerInput.value.trim();
+      
+      if (!question || !answer) {
+        alert("Please enter both a question and an answer!");
+        return;
+      }
+
+      cards.push({ question, answer });
+      saveCards();
+      
+      currentCardIndex = cards.length - 1;
+      updateCardDisplay();
+      
+      // Reset inputs & close
+      questionInput.value = '';
+      answerInput.value = '';
+      modalOverlay.classList.remove('open');
+    });
+
+    clearDeckBtn.addEventListener('click', () => {
+      if (confirm("Are you sure you want to delete all cards from this deck?")) {
+        cards = [];
+        saveCards();
+        currentCardIndex = 0;
+        updateCardDisplay();
+      }
+    });
+
+    // Initialize
+    cards = getCards();
+    updateCardDisplay();
+  </script>
+</body>
+</html>

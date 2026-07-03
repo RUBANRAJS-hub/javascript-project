@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixel Art Maker</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: rgba(22, 30, 49, 0.6);
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #f1f5f9;
+      --text-muted: #64748b;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    header {
+      text-align: center;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Controls Panel */
+    .panel {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.5rem;
+      backdrop-filter: blur(16px);
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .panel-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .panel h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+    }
+
+    .grid-inputs {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .grid-inputs input {
+      width: 60px;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.4rem;
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.25rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .color-picker-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .color-picker {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      width: 44px;
+      height: 44px;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+    }
+
+    .color-picker::-webkit-color-swatch {
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+    }
+
+    .tool-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .tool-btn:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .tool-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* Drawing Board */
+    .artboard-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      overflow: auto;
+    }
+
+    .artboard {
+      display: grid;
+      background: #1e293b;
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    .pixel {
+      aspect-ratio: 1;
+      background-color: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      cursor: crosshair;
+      user-select: none;
+    }
+
+    .pixel:hover {
+      box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.2);
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 1.5rem;
+      left: 1.5rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .back-btn:hover {
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <a href="../index.html" class="back-btn">← Back to Hub</a>
+
+  <div class="container">
+    <header>
+      <h1>Pixel Art Maker</h1>
+      <p style="color: var(--text-muted); margin-top: 0.25rem;">Create and export your own retro pixel art</p>
+    </header>
+
+    <div class="workspace">
+      <div class="panel">
+        <div class="panel-section">
+          <h3>Grid Options</h3>
+          <div class="grid-inputs">
+            <input type="number" id="widthInput" value="16" min="4" max="64">
+            <span>×</span>
+            <input type="number" id="heightInput" value="16" min="4" max="64">
+          </div>
+          <button class="btn" id="generateGridBtn">Resize Grid</button>
+        </div>
+
+        <div class="panel-section">
+          <h3>Draw Color</h3>
+          <div class="color-picker-wrapper">
+            <input type="color" class="color-picker" id="colorPicker" value="#6366f1">
+            <span id="colorValue" style="font-family: monospace; font-size: 0.9rem;">#6366f1</span>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h3>Tools</h3>
+          <div class="tool-grid">
+            <button class="tool-btn active" id="drawToolBtn">✏️ Draw</button>
+            <button class="tool-btn" id="eraseToolBtn">🧼 Erase</button>
+            <button class="tool-btn" id="bucketToolBtn" style="grid-column: span 2;">🪣 Fill Bucket</button>
+          </div>
+        </div>
+
+        <div class="panel-section" style="margin-top: auto; gap: 0.75rem;">
+          <button class="btn btn-secondary" id="clearBtn">Clear Canvas</button>
+          <button class="btn" id="exportBtn">Export PNG</button>
+        </div>
+      </div>
+
+      <div class="artboard-container">
+        <div class="artboard" id="artboard"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const artboard = document.getElementById('artboard');
+    const widthInput = document.getElementById('widthInput');
+    const heightInput = document.getElementById('heightInput');
+    const generateGridBtn = document.getElementById('generateGridBtn');
+    const colorPicker = document.getElementById('colorPicker');
+    const colorValue = document.getElementById('colorValue');
+    const drawToolBtn = document.getElementById('drawToolBtn');
+    const eraseToolBtn = document.getElementById('eraseToolBtn');
+    const bucketToolBtn = document.getElementById('bucketToolBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const exportBtn = document.getElementById('exportBtn');
+
+    let isDrawing = false;
+    let currentTool = 'draw'; // 'draw', 'erase', 'bucket'
+
+    colorPicker.addEventListener('input', (e) => {
+      colorValue.textContent = e.target.value;
+    });
+
+    // Tool switching
+    function setActiveTool(tool) {
+      currentTool = tool;
+      drawToolBtn.classList.remove('active');
+      eraseToolBtn.classList.remove('active');
+      bucketToolBtn.classList.remove('active');
+
+      if (tool === 'draw') drawToolBtn.classList.add('active');
+      if (tool === 'erase') eraseToolBtn.classList.add('active');
+      if (tool === 'bucket') bucketToolBtn.classList.add('active');
+    }
+
+    drawToolBtn.addEventListener('click', () => setActiveTool('draw'));
+    eraseToolBtn.addEventListener('click', () => setActiveTool('erase'));
+    bucketToolBtn.addEventListener('click', () => setActiveTool('bucket'));
+
+    function createGrid() {
+      const width = parseInt(widthInput.value);
+      const height = parseInt(heightInput.value);
+      
+      artboard.innerHTML = '';
+      artboard.style.gridTemplateColumns = `repeat(${width}, 1fr)`;
+      
+      // Keep width bounds relative
+      const containerWidth = Math.min(450, window.innerWidth - 60);
+      const pixelSize = Math.floor(containerWidth / width);
+      artboard.style.width = `${pixelSize * width}px`;
+      artboard.style.height = `${pixelSize * height}px`;
+
+      for (let i = 0; i < width * height; i++) {
+        const pixel = document.createElement('div');
+        pixel.className = 'pixel';
+        pixel.style.width = `${pixelSize}px`;
+        pixel.style.height = `${pixelSize}px`;
+        
+        pixel.addEventListener('mousedown', (e) => {
+          isDrawing = true;
+          handlePixelAction(pixel);
+        });
+
+        pixel.addEventListener('mouseenter', () => {
+          if (isDrawing && currentTool !== 'bucket') {
+            handlePixelAction(pixel);
+          }
+        });
+
+        artboard.appendChild(pixel);
+      }
+    }
+
+    window.addEventListener('mouseup', () => {
+      isDrawing = false;
+    });
+
+    function handlePixelAction(pixel) {
+      if (currentTool === 'draw') {
+        pixel.style.backgroundColor = colorPicker.value;
+      } else if (currentTool === 'erase') {
+        pixel.style.backgroundColor = 'transparent';
+      } else if (currentTool === 'bucket') {
+        fillGrid(pixel);
+      }
+    }
+
+    // Flood Fill algorithm
+    function fillGrid(startPixel) {
+      const targetColor = startPixel.style.backgroundColor || 'transparent';
+      const replacementColor = colorPicker.value;
+      if (targetColor === replacementColor) return;
+
+      const pixels = Array.from(artboard.children);
+      const width = parseInt(widthInput.value);
+      const height = parseInt(heightInput.value);
+      const startIndex = pixels.indexOf(startPixel);
+
+      const queue = [startIndex];
+      const visited = new Set();
+
+      while (queue.length > 0) {
+        const current = queue.shift();
+        if (visited.has(current)) continue;
+        visited.add(current);
+
+        const currentPixel = pixels[current];
+        const currentColor = currentPixel.style.backgroundColor || 'transparent';
+
+        if (currentColor === targetColor) {
+          currentPixel.style.backgroundColor = replacementColor;
+          
+          const x = current % width;
+          const y = Math.floor(current / width);
+
+          // Check neighbors
+          if (x > 0) queue.push(current - 1); // left
+          if (x < width - 1) queue.push(current + 1); // right
+          if (y > 0) queue.push(current - width); // up
+          if (y < height - 1) queue.push(current + width); // down
+        }
+      }
+    }
+
+    clearBtn.addEventListener('click', () => {
+      document.querySelectorAll('.pixel').forEach(p => p.style.backgroundColor = 'transparent');
+    });
+
+    generateGridBtn.addEventListener('click', createGrid);
+
+    // Export PNG utilizing HTML5 Canvas
+    exportBtn.addEventListener('click', () => {
+      const width = parseInt(widthInput.value);
+      const height = parseInt(heightInput.value);
+      const scale = 20; // 20px per pixel in export
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width * scale;
+      canvas.height = height * scale;
+      const ctx = canvas.getContext('2d');
+
+      const pixels = Array.from(artboard.children);
+      pixels.forEach((pixel, idx) => {
+        const x = (idx % width) * scale;
+        const y = Math.floor(idx / width) * scale;
+        
+        const color = pixel.style.backgroundColor;
+        if (color && color !== 'transparent') {
+          ctx.fillStyle = color;
+          ctx.fillRect(x, y, scale, scale);
+        } else {
+          // Transparent check transparent background (draw grey/white checkered pattern or leave transparent)
+          // We'll leave it transparent for PNG
+        }
+      });
+
+      const url = canvas.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'pixel-art.png';
+      a.click();
+    });
+
+    // Start with default grid
+    createGrid();
+  </script>
+</body>
+</html>
