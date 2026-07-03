@@ -1,5 +1,9 @@
 # Ruban JS Projects Hub
 
+<p align="center">
+  <img src="3d-cube.svg" width="350" alt="3D Rotating Cube Animation" />
+</p>
+
 A premium, interactive showcase of **31 mini-projects** built using raw, vanilla front-end web technologies: **HTML5, CSS3, and JavaScript**.
 
 This repository contains a central glassmorphic portal/dashboard allowing you to browse, filter, search, and launch all projects instantly.
